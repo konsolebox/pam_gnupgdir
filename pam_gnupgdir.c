@@ -63,6 +63,8 @@ PAM_EXTERN int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, cons
 	int i, debug = 0;
 	int skip_root = 0;
 
+	(void)flags;
+
 	if (pam_get_user(pamh, &user, NULL) != PAM_SUCCESS || !user) {
 		pam_syslog(pamh, LOG_ERR, "Cannot get username");
 		return PAM_SESSION_ERR;
@@ -121,7 +123,7 @@ PAM_EXTERN int pam_sm_open_session(pam_handle_t *pamh, int flags, int argc, cons
 
 #define DEFINE_NOOP(name, ret) \
 	PAM_EXTERN int pam_sm_##name(pam_handle_t *pamh, int flags, int argc, const char **argv) \
-	{ return ret; }
+	{ (void)pamh; (void)flags; (void)argc; (void)argv; return ret; }
 
 DEFINE_NOOP(close_session, PAM_SUCCESS)
 DEFINE_NOOP(authenticate, PAM_IGNORE)
